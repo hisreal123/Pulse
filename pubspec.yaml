@@ -25,7 +25,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/logo/a_pulse.png"
-  adaptive_icon_background: "#5B35C4"
+  adaptive_icon_background: "#2E6B3F"
   adaptive_icon_foreground: "assets/logo/a_pulse.png"
 
 
