@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulse/core/model/expense.dart';
 import 'package:pulse/features/expenses/expenses_list_controller.dart';
+import 'package:pulse/features/expenses/widget/expense_tile.dart';
+import 'package:pulse/features/expenses/widget/greeting_header.dart';
+import 'package:pulse/features/expenses/widget/total_header.dart';
 
 class ExpensesListPage extends ConsumerWidget {
   const ExpensesListPage({super.key});
@@ -11,28 +14,55 @@ class ExpensesListPage extends ConsumerWidget {
     final state = ref.watch(expensesListControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pulse')),
-      body: _body(ref, state),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const GreetingHeader(),
+            Expanded(child: _body(context, ref, state)),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _body(WidgetRef ref, AsyncValue<List<Expense>> state) {
+  Widget _body(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<List<Expense>> state,
+  ) {
     if (state.hasValue) {
       final expenses = state.requireValue;
       return RefreshIndicator(
         onRefresh: () => ref.refresh(expensesListControllerProvider.future),
-        child: expenses.isEmpty
-            ? ListView(
-                children: const [
-                  SizedBox(height: 200),
-                  Center(child: Text('No expenses yet')),
-                ],
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(child: TotalHeader(expenses: expenses)),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 28, 20, 8),
+                child: Text(
+                  'Transactions',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            if (expenses.isEmpty)
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Text('No expenses yet')),
               )
-            : ListView.builder(
+            else
+              SliverList.builder(
                 itemCount: expenses.length,
                 itemBuilder: (context, index) =>
-                    ListTile(title: Text(expenses[index].title)),
+                    ExpenseTile(expense: expenses[index]),
               ),
+          ],
+        ),
       );
     }
 
