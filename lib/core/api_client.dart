@@ -1,7 +1,17 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:pulse/core/env.dart';
 import 'package:pulse/core/failure.dart';
+
+
+final apiClientProvider = Provider<ApiClient>((ref) {
+  final client = http.Client();
+  ref.onDispose(client.close);
+  return ApiClient(client: client, baseUrl: '${Env.apiBase}/api/${Env.bucket}');
+});
+
 
 class ApiClient {
   ApiClient({required this.client, required this.baseUrl});

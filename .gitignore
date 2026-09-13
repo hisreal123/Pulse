@@ -46,3 +46,6 @@ app.*.map.json
 
 # Tooling
 devtools_options.yaml
+
+# Local environment values
+env.json
