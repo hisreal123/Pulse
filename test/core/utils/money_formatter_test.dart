@@ -59,5 +59,9 @@ void main() {
     test('rejects more precision than kobo allows', () {
       expect(koboFromInput('12.999'), isNull);
     });
+
+    test('rejects amounts too large to store instead of throwing', () {
+      expect(koboFromInput('99999999999999999999'), isNull);
+    });
   });
 }

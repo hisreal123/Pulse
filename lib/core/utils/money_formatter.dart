@@ -13,7 +13,7 @@ int? koboFromInput(String? input) {
 
   final cleaned = input.trim().replaceAll(',', '').replaceAll(' ', '');
   if (cleaned.isEmpty) return null;
-  if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(cleaned)) return null;
+  if (!RegExp(r'^\d{1,15}(\.\d{1,2})?$').hasMatch(cleaned)) return null;
 
   final parts = cleaned.split('.');
   final naira = int.parse(parts[0]);
