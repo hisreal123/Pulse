@@ -44,6 +44,16 @@ class LocalExpenseRepository implements ExpenseRepository {
   }
 
   @override
+  Future<Expense> getExpense(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final index = _expenses.indexWhere((expense) => expense.id == id);
+    if (index == -1) throw const NotFoundFailure();
+
+    return _expenses[index];
+  }
+
+  @override
   Future<Expense> createExpense({
     required String title,
     required int amountKobo,

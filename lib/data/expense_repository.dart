@@ -15,6 +15,8 @@ final expenseRepositoryProvider = Provider<ExpenseRepository>((ref) {
 abstract interface class ExpenseRepository {
   Future<List<Expense>> getAllExpenses();
 
+  Future<Expense> getExpense(String id);
+
   Future<Expense> createExpense({
     required String title,
     required int amountKobo,
