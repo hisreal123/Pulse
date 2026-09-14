@@ -18,6 +18,12 @@ class HttpExpenseRepository implements ExpenseRepository {
   }
 
   @override
+  Future<Expense> getExpense(String id) async {
+    final json = await api.get('/expenses/$id');
+    return Expense.fromJson(json as Map<String, dynamic>);
+  }
+
+  @override
   Future<Expense> createExpense({
     required String title,
     required int amountKobo,

@@ -91,7 +91,8 @@ class ExpensesListPage extends ConsumerWidget {
             expense: expenses[index],
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => ExpenseDetailPage(expense: expenses[index]),
+                builder: (_) =>
+                    ExpenseDetailPage(expenseId: expenses[index].id),
               ),
             ),
           ),
