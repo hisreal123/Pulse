@@ -5,9 +5,10 @@ import 'package:pulse/core/utils/money_formatter.dart';
 import 'package:pulse/features/expenses/widget/category_icon.dart';
 
 class ExpenseTile extends StatelessWidget {
-  const ExpenseTile({super.key, required this.expense});
+  const ExpenseTile({super.key, required this.expense, this.onTap});
 
   final Expense expense;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,7 @@ class ExpenseTile extends StatelessWidget {
         ),
       ),
       trailing: Text(formatNaira(expense.amountKobo), style: bold),
+      onTap: onTap,
     );
   }
 }

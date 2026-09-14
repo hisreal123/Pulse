@@ -33,6 +33,14 @@ class ExpensesListController extends AsyncNotifier<List<Expense>> {
     state = AsyncData(_newestFirst([created, ...current]));
   }
 
+  Future<void> deleteExpense(String id) async {
+    final repository = ref.read(expenseRepositoryProvider);
+    await repository.deleteExpense(id);
+
+    final current = state.value ?? const <Expense>[];
+    state = AsyncData(current.where((e) => e.id != id).toList());
+  }
+
   List<Expense> _newestFirst(List<Expense> expenses) {
     return expenses..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
