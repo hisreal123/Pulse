@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:pulse/core/api_log.dart';
 import 'package:pulse/core/env.dart';
 import 'package:pulse/core/failure.dart';
 
@@ -20,13 +21,17 @@ class ApiClient {
   final String baseUrl;
 
   Future<Object?> get(String path) {
-    return _send(client.get(_uri(path)));
+    final uri = _uri(path);
+    return _send('GET', uri, client.get(uri));
   }
 
   Future<Object?> post(String path, Map<String, dynamic> body) {
+    final uri = _uri(path);
     return _send(
+      'POST',
+      uri,
       client.post(
-        _uri(path),
+        uri,
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       ),
@@ -34,20 +39,30 @@ class ApiClient {
   }
 
   Future<void> delete(String path) async {
-    await _send(client.delete(_uri(path)));
+    final uri = _uri(path);
+    await _send('DELETE', uri, client.delete(uri));
   }
 
   Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
-  Future<Object?> _send(Future<http.Response> request) async {
+  Future<Object?> _send(
+    String method,
+    Uri uri,
+    Future<http.Response> request,
+  ) async {
+    final stopwatch = Stopwatch()..start();
+    apiLog('$method $uri');
+
     final http.Response response;
     try {
       response = await request;
-    } on http.ClientException {
+    } on http.ClientException catch (error) {
+      apiLog('$method $uri failed: ${error.message}');
       throw const NetworkFailure();
     }
 
     final status = response.statusCode;
+    apiLog('$method $uri -> $status (${stopwatch.elapsedMilliseconds} ms)');
     if (status >= 200 && status < 300) {
       return response.body.isEmpty ? null : jsonDecode(response.body);
     }

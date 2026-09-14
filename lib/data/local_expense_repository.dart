@@ -1,3 +1,4 @@
+import 'package:pulse/core/api_log.dart';
 import 'package:pulse/core/failure.dart';
 import 'package:pulse/core/model/category.dart';
 import 'package:pulse/core/model/expense.dart';
@@ -39,17 +40,24 @@ class LocalExpenseRepository implements ExpenseRepository {
 
   @override
   Future<List<Expense>> getAllExpenses() async {
+    apiLog('stub GET /expenses');
     await Future.delayed(const Duration(milliseconds: 800));
+    apiLog('stub GET /expenses -> 200 (${_expenses.length} expenses)');
     return List.of(_expenses);
   }
 
   @override
   Future<Expense> getExpense(String id) async {
+    apiLog('stub GET /expenses/$id');
     await Future.delayed(const Duration(milliseconds: 500));
 
     final index = _expenses.indexWhere((expense) => expense.id == id);
-    if (index == -1) throw const NotFoundFailure();
+    if (index == -1) {
+      apiLog('stub GET /expenses/$id -> 404');
+      throw const NotFoundFailure();
+    }
 
+    apiLog('stub GET /expenses/$id -> 200');
     return _expenses[index];
   }
 
@@ -59,6 +67,7 @@ class LocalExpenseRepository implements ExpenseRepository {
     required int amountKobo,
     ExpenseCategory? category,
   }) async {
+    apiLog('stub POST /expenses');
     await Future.delayed(const Duration(milliseconds: 500));
 
     if (title.trim().isEmpty) throw const ValidationFailure("Title is Required");
@@ -73,16 +82,22 @@ class LocalExpenseRepository implements ExpenseRepository {
     );
 
     _expenses.add(expense);
+    apiLog('stub POST /expenses -> 201 (id ${expense.id})');
     return expense;
   }
 
   @override
   Future<void> deleteExpense(String id) async {
+    apiLog('stub DELETE /expenses/$id');
     await Future.delayed(const Duration(milliseconds: 300));
 
     final index = _expenses.indexWhere((expense) => expense.id == id);
-    if (index == -1) throw const NotFoundFailure();
+    if (index == -1) {
+      apiLog('stub DELETE /expenses/$id -> 404');
+      throw const NotFoundFailure();
+    }
 
     _expenses.removeAt(index);
+    apiLog('stub DELETE /expenses/$id -> 204');
   }
 }
