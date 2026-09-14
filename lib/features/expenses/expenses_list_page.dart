@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulse/core/failure.dart';
+import 'package:pulse/features/add_expense/add_expense_page.dart';
 import 'package:pulse/core/model/expense.dart';
 import 'package:pulse/features/expenses/expenses_list_controller.dart';
 import 'package:pulse/features/expenses/widget/expense_tile.dart';
@@ -14,8 +15,20 @@ class ExpensesListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(expensesListControllerProvider);
+    final showingList = !state.isLoading && !state.hasError;
 
     return Scaffold(
+      floatingActionButton: showingList
+          ? FloatingActionButton.extended(
+              onPressed: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const AddExpensePage())),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              icon: const Icon(Icons.add),
+              label: const Text('Add expense'),
+            )
+          : null,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => _refresh(ref),
