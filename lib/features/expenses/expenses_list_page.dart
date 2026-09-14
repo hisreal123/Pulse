@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pulse/core/failure.dart';
 import 'package:pulse/features/add_expense/add_expense_page.dart';
+import 'package:pulse/features/expense_detail/expense_detail_page.dart';
 import 'package:pulse/core/model/expense.dart';
 import 'package:pulse/features/expenses/expenses_list_controller.dart';
 import 'package:pulse/features/expenses/widget/expense_tile.dart';
@@ -86,8 +87,14 @@ class ExpensesListPage extends ConsumerWidget {
       else
         SliverList.builder(
           itemCount: expenses.length,
-          itemBuilder: (context, index) =>
-              ExpenseTile(expense: expenses[index]),
+          itemBuilder: (context, index) => ExpenseTile(
+            expense: expenses[index],
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ExpenseDetailPage(expense: expenses[index]),
+              ),
+            ),
+          ),
         ),
       const SliverToBoxAdapter(child: SizedBox(height: 24)),
     ];
