@@ -13,7 +13,7 @@ cp env.example.json env.json
 
 Fill in `env.json`:
 
-- `API_BASE`: the API host, e.g. `https://pebblescore-api.dev.pebblescore.com`
+- `API_BASE`: the API host, e.g. `https://api-jobs.dev.pebblescore.com`
 - `BUCKET`: any name, used to keep your data separate
 - `USE_LOCAL_STUB`: set to `"true"` to run on in-memory sample data instead of the API
 
@@ -31,7 +31,7 @@ Tests:
 flutter test
 ```
 
-About the API: it was returning 502 on every route from 11 Sept, so I emailed PebbleScore and kept building against a local stub that behaves like the documented API (same operations, same validation and not-found errors). The HTTP implementation is there, and setting `USE_LOCAL_STUB` to `"false"` switches to it.
+About the API: the first host was down the whole time I was building. Every route returned 502 from 11 Sept, so I emailed PebbleScore about it and carried on with a local stub that behaves like the API in the docs. I finally got a new base URL from them, and everything works against the real API now. The only thing I changed was `API_BASE`, no code. The stub is still in there if you want to run the app without a network.
 
 ## State management
 
